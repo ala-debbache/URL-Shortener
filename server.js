@@ -40,7 +40,7 @@ app.get("/api/shorturl/:short_url?",async (req,res)=>{
   try {
     let findOne = await Url.findOne({short_url: req.params.short_url});
     if(findOne){
-      res.json({original_url: findOne.originalUrl,short_url: findOne.shortUrl});
+      res.json({original_url: findOne.original_url,short_url: findOne.short_url});
     }else{
       res.json({ error: 'invalid url' });
     }
@@ -56,14 +56,14 @@ app.post("/api/shorturl",async (req,res)=>{
     try {
       let findOne = await Url.findOne({original_url: url});
       if(findOne){
-        res.json({original_url: findOne.originalUrl,short_url: findOne.shortUrl});
+        res.json({original_url: findOne.original_url,short_url: findOne.short_url});
       }else{
         let new_url = new Url({
           original_url: url,
           short_url: urlCode
         });
         await new_url.save();
-        res.json({original_url: new_url.originalUrl,short_url: new_url.shortUrl});
+        res.json({original_url: new_url.original_url,short_url: new_url.short_url});
       }
     } catch {
       res.status(401).json({error: "server or database error"});
