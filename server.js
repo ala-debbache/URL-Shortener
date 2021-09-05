@@ -2,7 +2,6 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const Shortid = require('shortid');
 const ValidUrl = require('valid-url');
 const mongodb = require('mongodb');
 const mongoose = require('mongoose');
@@ -17,7 +16,7 @@ const { Schema } = mongoose;
 
 const urlSchema = new Schema({
   original_url: String,
-  short_url: String
+  short_url: Number
 });
 
 const Url = mongoose.model("Url",urlSchema);
@@ -51,16 +50,16 @@ app.get("/api/shorturl/:short_url?",async (req,res)=>{
 
 app.post("/api/shorturl",async (req,res)=>{
   const url = req.body.url;
-  const urlCode = Shortid.generate();
   if(ValidUrl.isWebUri(url)){
     try {
       let findOne = await Url.findOne({original_url: url});
       if(findOne){
         res.json({original_url: findOne.original_url,short_url: findOne.short_url});
       }else{
+        let count = await Url.countDocuments();
         let new_url = new Url({
           original_url: url,
-          short_url: urlCode
+          short_url: count+1
         });
         await new_url.save();
         res.json({original_url: new_url.original_url,short_url: new_url.short_url});
