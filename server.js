@@ -16,8 +16,8 @@ mongoose.connect(process.env.MONGO_URI);
 const { Schema } = mongoose;
 
 const urlSchema = new Schema({
-  originalUrl: String,
-  shortUrl: String
+  original_url: String,
+  short_url: String
 });
 
 const Url = mongoose.model("Url",urlSchema);
@@ -38,7 +38,7 @@ app.get('/api/hello', function(req, res) {
 
 app.get("/api/shorturl/:short_url?",async (req,res)=>{
   try {
-    let findOne = await Url.findOne({shortUrl: req.params.short_url});
+    let findOne = await Url.findOne({short_url: req.params.short_url});
     if(findOne){
       res.json({original_url: findOne.originalUrl,short_url: findOne.shortUrl});
     }else{
@@ -54,13 +54,13 @@ app.post("/api/shorturl",async (req,res)=>{
   const urlCode = Shortid.generate();
   if(ValidUrl.isWebUri(url)){
     try {
-      let findOne = await Url.findOne({originalUrl: url});
+      let findOne = await Url.findOne({original_url: url});
       if(findOne){
         res.json({original_url: findOne.originalUrl,short_url: findOne.shortUrl});
       }else{
         let new_url = new Url({
-          originalUrl: url,
-          shortUrl: urlCode
+          original_url: url,
+          short_url: urlCode
         });
         await new_url.save();
         res.json({original_url: new_url.originalUrl,short_url: new_url.shortUrl});
