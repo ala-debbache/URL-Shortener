@@ -40,7 +40,7 @@ app.get("/api/shorturl/:short_url?",async (req,res)=>{
   try {
     let findOne = await Url.findOne({short_url: req.params.short_url});
     if(findOne){
-      res.json({original_url: findOne.original_url,short_url: findOne.short_url});
+      res.redirect(findOne.original_url);
     }else{
       res.json({ error: 'invalid url' });
     }
