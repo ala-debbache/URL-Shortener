@@ -35,7 +35,7 @@ app.get('/api/hello', function(req, res) {
   res.json({ greeting: 'hello API' });
 });
 
-app.get("/api/shorturl/:short_url?",async (req,res)=>{
+app.get("/api/shorturl/:short_url",async (req,res)=>{
   try {
     let findOne = await Url.findOne({short_url: req.params.short_url});
     if(findOne){
